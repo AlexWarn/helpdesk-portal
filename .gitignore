@@ -1,0 +1,45 @@
+# macOS
+.DS_Store
+
+# JetBrains / VS Code
+.idea/
+.vscode/
+
+# Logs
+*.log
+logs/
+
+# .NET
+bin/
+obj/
+
+# User-specific
+*.user
+*.suo
+
+# Test results
+TestResults/
+coverage/
+*.coverage
+*.trx
+
+# NuGet
+*.nupkg
+
+# Environment
+.env
+.env.*
+
+# Node
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
+*.pid
+
+# EF / local secrets
+secrets.json
