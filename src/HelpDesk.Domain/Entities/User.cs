@@ -1,0 +1,15 @@
+using HelpDesk.Domain.Common;
+using HelpDesk.Domain.Enums;
+
+namespace HelpDesk.Domain.Entities;
+
+public class User : BaseEntity
+{
+    public string Email { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
+    public string FirstName { get; set; } = null!;
+    public string LastName { get; set; } = null!;
+    public UserRole Role { get; set; } = UserRole.Client;
+    public bool IsActive { get; set; } = true;
+    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+}
