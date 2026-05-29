@@ -1,0 +1,22 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <h1>HelpDesk</h1>
+
+    <nav>
+      <a routerLink="/">Home</a>
+      <a routerLink="/tickets">Tickets</a>
+      <a routerLink="/login">Login</a>
+      <a routerLink="/register">Register</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <span>HelpDesk Portal</span>
+    </header>
+
+    <section class="page">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>
