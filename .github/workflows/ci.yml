@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore backend
+        run: dotnet restore HelpDesk.sln
+
+      - name: Build backend
+        run: dotnet build HelpDesk.sln --configuration Release --no-restore
+
+      - name: Test backend
+        run: dotnet test HelpDesk.sln --configuration Release --no-build
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        working-directory: frontend/helpdesk-web
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend/helpdesk-web
+        run: npm run build
