@@ -18,6 +18,6 @@ public class FullNameTests
             middleName);
         
         
-        Assert.Equal($"{firstName} {lastName}", fullName.Value);
+        Assert.Equal($"{lastName} {firstName}", fullName.Value);
     }
 }
