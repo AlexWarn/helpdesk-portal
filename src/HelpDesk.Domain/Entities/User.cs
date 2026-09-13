@@ -23,6 +23,7 @@ public class User : BaseEntity
         FullName fullName,
         DateTime createdAtUtc)
     {
+        Id = Guid.NewGuid();
         Email = email;
         PasswordHash = passwordHash;
         FullName = fullName;
@@ -31,19 +32,19 @@ public class User : BaseEntity
         CreatedAtUtc = createdAtUtc;
     }
 
-    public static User Create(Email email,
-        string passwordHash,
-        FullName fullName,
+    public static User Create(Email? email,
+        string? passwordHash,
+        FullName? fullName,
         DateTime createdAtUtc
     )
     {
         Validate(email, fullName, passwordHash, createdAtUtc);
         
-        return new User(email, passwordHash, fullName, createdAtUtc);
+        return new User(email!, passwordHash!, fullName!, createdAtUtc);
     }
 
-    private static void Validate(Email email, 
-        FullName fullName, string passwordHash,
+    private static void Validate(Email? email, 
+        FullName? fullName, string? passwordHash,
         DateTime createdAtUtc)
     {
         if (email is null)
@@ -67,7 +68,7 @@ public class User : BaseEntity
         }
     }
     
-    public void ChangeFullName(FullName newFullName)
+    public void ChangeFullName(FullName? newFullName)
     {
         if (newFullName is null)
         {
@@ -83,7 +84,7 @@ public class User : BaseEntity
         FullName = newFullName;
     }
 
-    public void ChangeEmail(Email email)
+    public void ChangeEmail(Email? email)
     {
         if (email is null)
         {
@@ -98,7 +99,7 @@ public class User : BaseEntity
         Email = email;
     }
 
-    public void ChangePasswordHash(string newPasswordHash)
+    public void ChangePasswordHash(string? newPasswordHash)
     {
         if (string.IsNullOrWhiteSpace(newPasswordHash))
         {
