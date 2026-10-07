@@ -24,6 +24,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\HelpDesk.Domain\HelpDesk.Domain.csproj" />
     <ProjectReference Include="..\..\src\HelpDesk.Application\HelpDesk.Application.csproj" />
+    <ProjectReference Include="..\..\src\HelpDesk.Infrastructure\HelpDesk.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\" />
   </ItemGroup>
 
 </Project>
