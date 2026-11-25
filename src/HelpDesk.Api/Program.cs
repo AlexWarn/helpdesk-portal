@@ -44,3 +44,7 @@ app.MapGet("/error-test", () =>
 });
 
 app.Run();
+
+public partial class Program
+{
+}

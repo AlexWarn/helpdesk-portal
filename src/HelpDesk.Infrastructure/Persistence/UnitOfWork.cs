@@ -1,20 +1,26 @@
 using HelpDesk.Application.Abstractions;
+using HelpDesk.Infrastructure.Persistence.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace HelpDesk.Infrastructure.Persistence;
 
-public sealed class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork(AppDbContext dbContext)
+    : IUnitOfWork
 {
-    private readonly AppDbContext _dbContext;
-
-    public UnitOfWork(AppDbContext dbContext)
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
-        _dbContext = dbContext;
-    }
+        try
+        {
+            return await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException exception)
+        {
+            if (DatabaseExceptionTranslator.TryTranslate(exception, out var translatedException))
+            {
+                throw translatedException!;
+            }
 
-    public Task<int> SaveChangesAsync(
-        CancellationToken cancellationToken)
-    {
-        return _dbContext.SaveChangesAsync(
-            cancellationToken);
+            throw;
+        }
     }
 }

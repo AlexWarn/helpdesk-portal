@@ -1,32 +1,19 @@
 using HelpDesk.Application.Abstractions;
+using HelpDesk.Application.Constants;
+using HelpDesk.Application.Exceptions;
 using HelpDesk.Domain.Entities;
 using HelpDesk.Domain.Exceptions;
 using HelpDesk.Domain.ValueObjects;
 
 namespace HelpDesk.Application.Users.Register;
 
-public sealed class RegisterUserUseCase
+public sealed class RegisterUserUseCase(
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher,
+    IPasswordPolicy passwordPolicy,
+    IClock clock,
+    IUnitOfWork unitOfWork)
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IPasswordHasher _passwordHasher; 
-    private readonly IPasswordPolicy _passwordPolicy;
-    private readonly IClock _clock;
-    private readonly IUnitOfWork _unitOfWork;
-    
-    public RegisterUserUseCase(
-        IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
-        IPasswordPolicy passwordPolicy,
-        IClock clock,
-        IUnitOfWork unitOfWork)
-    {
-        _userRepository = userRepository;
-        _passwordHasher = passwordHasher;
-        _clock = clock;
-        _unitOfWork = unitOfWork;
-        _passwordPolicy = passwordPolicy;
-    }
-
     public async Task<RegisterUserResult> ExecuteAsync(
         RegisterUserCommand command,
         CancellationToken cancellationToken)
@@ -38,31 +25,33 @@ public sealed class RegisterUserUseCase
             command.LastName,
             command.MiddleName);
 
-        var emailExists = await _userRepository.ExistsByEmailAsync(
+        var emailExists = await userRepository.ExistsByEmailAsync(
             email,
             cancellationToken);
 
         if (emailExists)
         {
-            throw new DomainException("User with this email already exists.");
+            throw new ConflictException(
+                ErrorCodes.UserEmailAlreadyExists,
+                "User with this email already exists.");
         }
         
-        _passwordPolicy.Validate(command.Password);
+        passwordPolicy.Validate(command.Password);
         
-        var passwordHash = _passwordHasher
+        var passwordHash = passwordHasher
             .Hash(command.Password);
         
         var user = User.Create(
             email,
             passwordHash,
             fullName,
-            _clock.UtcNow);
+            clock.UtcNow);
         
-        await _userRepository.AddAsync(
+        await userRepository.AddAsync(
             user,
             cancellationToken);
 
-        await _unitOfWork.SaveChangesAsync(
+        await unitOfWork.SaveChangesAsync(
             cancellationToken);
         
         return new RegisterUserResult(

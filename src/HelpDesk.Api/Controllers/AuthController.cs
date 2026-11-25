@@ -1,14 +1,8 @@
+using HelpDesk.Api.Contracts.Auth;
 using HelpDesk.Application.Users.Register;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDesk.Api.Controllers;
-
-public sealed record RegisterUserRequest(
-    string Email,
-    string FirstName,
-    string LastName,
-    string? MiddleName,
-    string Password);
 
 [ApiController]
 [Route("api/auth")]
@@ -24,7 +18,7 @@ public sealed class AuthController : ControllerBase
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(
-        RegisterUserRequest request,
+        [FromBody] RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
         var command = new RegisterUserCommand(

@@ -1,4 +1,5 @@
 using HelpDesk.Application.Abstractions;
+using HelpDesk.Application.Exceptions;
 using HelpDesk.Application.Users.Register;
 using HelpDesk.Domain.Entities;
 using HelpDesk.Domain.Exceptions;
@@ -87,7 +88,7 @@ public class RegisterUserUseCaseTests
     }
 
     [Fact]
-    public async Task ExecuteAsync_WhenEmailAlreadyExists_ShouldThrowDomainException()
+    public async Task ExecuteAsync_WhenEmailAlreadyExists_ShouldThrowConflictException()
     {
         var command = CreateCommand();
         var handler = CreateHandler();
@@ -102,7 +103,10 @@ public class RegisterUserUseCaseTests
             CancellationToken.None);
         
         // Assert
-        await Assert.ThrowsAsync<DomainException>(action);
+        var ex = await Assert
+            .ThrowsAsync<ConflictException>(action);
+        
+        Assert.Equal("User with this email already exists.", ex.Message);
         
         _userRepositoryMock.Verify(
             x => x.ExistsByEmailAsync(

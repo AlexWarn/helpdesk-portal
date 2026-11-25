@@ -1,6 +1,14 @@
-@HelpDesk.Api_HostAddress = http://localhost:5286
-
-GET {{HelpDesk.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+@host = http://localhost:5286
 
 ###
+
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "  Alex.Test@Example.com  ",
+  "firstName": "Alex",
+  "lastName": "Warn",
+  "middleName": "Michailovich",
+  "password": "Password1!"
+}
